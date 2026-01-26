@@ -1,0 +1,39 @@
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist
+build
+
+# Virtual Environment
+.venv
+venv
+env
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Database (będzie tworzona w kontenerze)
+*.db
+instance/
+
+# Git
+.git
+.gitignore
+
+# Tests
+.pytest_cache
+.coverage
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml

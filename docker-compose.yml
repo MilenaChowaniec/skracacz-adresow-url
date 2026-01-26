@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # Uruchomienie aplikacji bez testow
+  app:
+    build:
+      context: .
+      target: production 
+    container_name: url-shortener-app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./instance:/app/instance  # Persystencja bazy danych
+    environment:
+      - FLASK_ENV=development
+    command: python run.py
+  
+  # Uruchomienie testow i aplikacji
+  app-test:
+    build:
+      context: .
+      target: production
+    container_name: url-shortener-app-test
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+      - ./instance:/app/instance
+    environment:
+      - FLASK_ENV=development
+    command: >
+      sh -c "pytest tests/ -v &&
+             python run.py"
+    depends_on:
+      - test 
+  
+  # Uruchomienie samych testow
+  test:
+    build:
+      context: .
+      target: production
+    container_name: url-shortener-test
+    volumes:
+      - .:/app
+    command: pytest tests/ -v --color=yes

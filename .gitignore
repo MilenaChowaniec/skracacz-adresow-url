@@ -1,0 +1,44 @@
+# Wirtualne środowisko Python
+.venv/
+venv/
+env/
+ENV/
+
+# Pliki Pythona
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Baza danych
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# Zmienne środowiskowe (mogą zawierać sekrety)
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logi
+*.log
+
+# Tymczasowe pliki
+*.tmp
+*.bak
