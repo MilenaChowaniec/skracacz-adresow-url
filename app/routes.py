@@ -3,7 +3,8 @@ Endpointy aplikacji
 Obsługa żądań HTTP
 """
 
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from sqlalchemy.exc import SQLAlchemyError
 import validators
 from app.database import db
 from app.models import URL
@@ -39,14 +40,19 @@ def shorten():
     if not validators.url(original_url) or len(original_url) > 2048:
         return redirect(url_for("main.index"))
 
-    # Zapisanie do bazy z tymczasowym kodem
-    new_url = URL(original_url=original_url, short_code="temp")
-    db.session.add(new_url)
-    db.session.flush()
+    try:
+        # Zapisanie do bazy z tymczasowym kodem
+        new_url = URL(original_url=original_url, short_code="temp")
+        db.session.add(new_url)
+        db.session.flush()
 
-    # Wygenerowanie i dodanie kodu do rekordu
-    new_url.short_code = id_to_short_code(new_url.id)
-    db.session.commit()
+        # Wygenerowanie i dodanie kodu do rekordu
+        new_url.short_code = id_to_short_code(new_url.id)
+        db.session.commit()
+
+    except SQLAlchemyError:
+        db.session.rollback()
+        flash("Skrocanie nie powiodlo sie.", "error")
 
     return redirect(url_for("main.index"))
 
@@ -81,8 +87,13 @@ def delete_url(url_id):
     Raises:
         404: jeśli URL nie istnieje
     """
-    url = URL.query.get_or_404(url_id)
-    db.session.delete(url)
-    db.session.commit()
+    try:
+        url = URL.query.get_or_404(url_id)
+        db.session.delete(url)
+        db.session.commit()
+
+    except SQLAlchemyError:
+        db.session.rollback()
+        flash("Usuwanie nie powiodlo sie.", "error")
 
     return redirect(url_for("main.index"))

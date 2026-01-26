@@ -29,4 +29,12 @@ def create_app(config_overrides=None):
 
     app.register_blueprint(main_bp)
 
+    @app.errorhandler(404)
+    def not_found(e):
+        return "Strona nie dziala", 404
+    
+    @app.errorhandler(500)
+    def internal_eror(e):
+        return "Cos poszlo nie tak", 500
+
     return app
