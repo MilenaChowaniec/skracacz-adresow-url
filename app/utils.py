@@ -23,5 +23,3 @@ def short_code_to_id(code: str) -> int:
     Returns:
     """
     return base62.decode(code)
-
-print(base62.encode(12345))
